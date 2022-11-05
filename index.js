@@ -1,2 +1,4 @@
-require("dotenv").config();
-console.log(process.env.ADMIN);
+const app = require('./src/app')
+const {PORT} = require('./src/config')
+
+app.listen(PORT)
