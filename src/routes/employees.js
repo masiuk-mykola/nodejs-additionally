@@ -1,9 +1,50 @@
-const express = require('express');
+const express = require("express");
+const {
+  getAllEmployeesCtrl,
+  getEmloyeeByIdCtrl,
+  addEmployeeCtrl,
+  updateEmployeeCtrl,
+  updatePositionAndSalaryEmployeeCtrl,
+  deleteEmployeeCtrl,
+} = require("../controllers/employees");
+const tryCatchWrapper = require("../helpers/tryCatchWrapper");
+const validator = require("../middlewares/validation");
+const { schemas } = require("../models/employees");
 
 const router = express.Router();
-router.get('/', (req, res) => res.sendStatus(230))
-router.get('/:id', (req, res) => res.sendStatus(230))
-router.post('/', (req, res) => res.sendStatus(230))
-router.patch('/:id', (req, res) => res.sendStatus(230))
-router.delete('/:id', (req, res) => res.sendStatus(230))
-router.put('/:id', (req, res) => res.sendStatus(230))
+
+router.get("/", tryCatchWrapper(getAllEmployeesCtrl));
+
+router.get(
+  "/:id",
+  validator.params(schemas.employeeId),
+  tryCatchWrapper(getEmloyeeByIdCtrl)
+);
+
+router.post(
+  "/",
+  validator.body(schemas.createEmployee),
+  tryCatchWrapper(addEmployeeCtrl)
+);
+
+router.patch(
+  "/:id/position&salary",
+  validator.params(schemas.employeeId),
+  validator.body(schemas.updatePosAndSalEmployee),
+  tryCatchWrapper(updateEmployeeCtrl)
+);
+
+router.delete(
+  "/:id",
+  validator.params(schemas.employeeId),
+  tryCatchWrapper(deleteEmployeeCtrl)
+);
+
+router.put(
+  "/:id",
+  validator.params(schemas.employeeId),
+  validator.body(schemas.updateEmployee),
+  tryCatchWrapper(updatePositionAndSalaryEmployeeCtrl)
+);
+
+module.exports = router;
